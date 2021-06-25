@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="sdc schema secondary" id="Project_dbc" database="MongoDb" >
+	<schema name="sdc schema secondary" >
+		<table name="features" prior="Collection" >
+			<column name="id" type="int" jt="4" />
+			<column name="feature" type="string" jt="12" />
+			<column name="value" type="string" jt="12" />
+		</table>
+		<table name="photos" prior="Collection_0" >
+			<column name="id" type="int" jt="4" />
+			<column name="thumbnail_url" type="string" jt="12" />
+			<column name="url" type="string" jt="12" />
+			<column name="style_id" type="int" jt="4" />
+			<fk name="fk_photos_styles" virtual="y" to_schema="sdc schema secondary" to_table="styles" >
+				<fk_column name="style_id" pk="id" />
+			</fk>
+		</table>
+		<table name="product_features" prior="Collection" >
+			<column name="id" type="int" jt="4" />
+			<column name="product_id" type="int" jt="4" />
+			<column name="feature_id" type="int" jt="4" />
+			<fk name="fk_product_features_features" virtual="y" to_schema="sdc schema secondary" to_table="features" >
+				<fk_column name="feature_id" pk="id" />
+			</fk>
+			<fk name="fk_product_features_products" virtual="y" to_schema="sdc schema secondary" to_table="products" >
+				<fk_column name="product_id" pk="id" />
+			</fk>
+		</table>
+		<table name="products" prior="product" >
+			<column name="id" type="int" jt="4" />
+			<column name="name" type="string" jt="12" />
+			<column name="slogan" type="string" jt="12" />
+			<column name="description" type="string" jt="12" />
+			<column name="category" type="string" jt="12" />
+			<column name="default_price" type="string" jt="12" />
+		</table>
+		<table name="related_products" prior="Collection" >
+			<column name="id" type="int" jt="4" />
+			<column name="product_1" type="int" jt="4" />
+			<column name="product_2" type="int" jt="4" />
+			<fk name="fk_related_products_products" virtual="y" to_schema="sdc schema secondary" to_table="products" >
+				<fk_column name="product_1" pk="id" />
+			</fk>
+			<fk name="fk_related_products_photos" virtual="y" to_schema="sdc schema secondary" to_table="products" >
+				<fk_column name="product_2" pk="id" />
+			</fk>
+		</table>
+		<table name="skus" prior="Collection" >
+			<column name="id" type="int" jt="4" />
+			<column name="quantity" type="int" jt="4" />
+			<column name="size" type="string" jt="12" />
+			<column name="style_id" type="int" jt="4" />
+			<column name="sku" type="string" jt="12" />
+			<fk name="fk_skus_styles" virtual="y" to_schema="sdc schema secondary" to_table="styles" >
+				<fk_column name="style_id" pk="id" />
+			</fk>
+		</table>
+		<table name="styles" prior="Collection" >
+			<column name="id" type="int" jt="4" />
+			<column name="name" type="string" jt="12" />
+			<column name="original_price" type="int" jt="4" >
+				<comment><![CDATA[prices will be stored as integers and therefore will be multiplied by 10 before being entered]]></comment>
+			</column>
+			<column name="sale_price" type="int" jt="4" >
+				<comment><![CDATA[prices will be stored as integers and therefore will be multiplied by 10 before being entered]]></comment>
+			</column>
+			<column name="default?" type="bool" jt="16" />
+			<column name="product_id" type="int" jt="4" />
+			<fk name="fk_collection_products" virtual="y" to_schema="sdc schema secondary" to_table="products" >
+				<fk_column name="product_id" pk="id" />
+			</fk>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout_1b3b" show_relation="columns" >
+		<entity schema="sdc schema secondary" name="features" color="C1D8EE" x="992" y="272" />
+		<entity schema="sdc schema secondary" name="photos" color="C1D8EE" x="832" y="480" />
+		<entity schema="sdc schema secondary" name="product_features" color="C1D8EE" x="752" y="272" />
+		<entity schema="sdc schema secondary" name="products" color="C1D8EE" x="528" y="272" />
+		<entity schema="sdc schema secondary" name="related_products" color="C1D8EE" x="304" y="272" />
+		<entity schema="sdc schema secondary" name="skus" color="C1D8EE" x="592" y="688" />
+		<entity schema="sdc schema secondary" name="styles" color="C1D8EE" x="592" y="496" />
+		<callout x="48" y="48" pointer="Round" >
+			<comment><![CDATA[DbSchema is disconnected from the database.
+New designed tables will be saved to project file and later can be create in any database.
+Right-click the layout to create new tables. Drop this callout from its context menu.]]></comment>
+		</callout>
+	</layout>
+</project>

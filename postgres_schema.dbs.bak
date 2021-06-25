@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="SDC Products" id="Project_5f6" database="PostgreSQL" >
+	<comment><![CDATA[API services for ecommerce project.]]></comment>
+	<schema name="products" />
+	<schema name="sdc schema primary" >
+		<table name="feature_values" prior="feature_value" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="value_name" type="varchar" jt="12" />
+			<index name="pk_feature_value_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="feature_values_import" prior="feature_values_0" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="value_name" type="varchar" jt="12" />
+			<index name="pk_feature_value_id_0" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_feature_values_import_value_name" unique="UNIQUE_KEY" >
+				<column name="value_name" />
+			</index>
+		</table>
+		<table name="features" prior="tbl_0" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="feature" type="char" length="255" jt="1" />
+			<index name="pk_features_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="features_csv" prior="tbl_0" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="product_id" type="integer" jt="4" />
+			<column name="feature" type="varchar" jt="12" />
+			<column name="value" type="varchar" jt="12" />
+			<index name="pk_features_csv_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_features_csv_products_csv" to_schema="sdc schema primary" to_table="products_csv" >
+				<fk_column name="product_id" pk="id" />
+			</fk>
+			<fk name="fk_features_csv_feature_values_import" to_schema="sdc schema primary" to_table="feature_values_import" >
+				<fk_column name="value" pk="value_name" />
+			</fk>
+			<fk name="fk_features_csv_features_import" to_schema="sdc schema primary" to_table="features_import" >
+				<fk_column name="feature" pk="feature" />
+			</fk>
+		</table>
+		<table name="features_import" prior="features_0" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="feature" type="char" length="255" jt="1" />
+			<index name="pk_features_id_0" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_features_import_feature" unique="UNIQUE_KEY" >
+				<column name="feature" />
+			</index>
+		</table>
+		<table name="photos" prior="tbl_0" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="style_id" type="integer" jt="4" />
+			<column name="url" type="char" length="510" jt="1" />
+			<column name="thumbnail_url" type="char" length="510" jt="1" />
+			<index name="pk_photos_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_photos_photos" to_schema="sdc schema primary" to_table="styles" >
+				<fk_column name="style_id" pk="id" />
+			</fk>
+		</table>
+		<table name="product_features" prior="tbl_0" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="product_id" type="integer" jt="4" />
+			<column name="feature_id" type="integer" jt="4" />
+			<column name="feature_value" type="integer" jt="4" />
+			<index name="pk_product_features_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_product_features_products" to_schema="sdc schema primary" to_table="products" >
+				<fk_column name="product_id" pk="id" />
+			</fk>
+			<fk name="fk_product_features_features" to_schema="sdc schema primary" to_table="features" >
+				<fk_column name="feature_id" pk="id" />
+			</fk>
+			<fk name="fk_product_features_feature_value" to_schema="sdc schema primary" to_table="feature_values" >
+				<fk_column name="feature_value" pk="id" />
+			</fk>
+		</table>
+		<table name="product_features_import" prior="product_features_0" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="product_id" type="integer" jt="4" />
+			<column name="feature_id" type="integer" jt="4" />
+			<column name="feature_value" type="integer" jt="4" />
+			<index name="pk_product_features_id_0" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="products" prior="product" >
+			<comment><![CDATA[table for product details]]></comment>
+			<column name="id" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[unique key]]></comment>
+			</column>
+			<column name="name" type="varchar" length="100" jt="12" />
+			<column name="slogan" type="varchar" length="255" jt="12" />
+			<column name="description" type="varchar" length="255" jt="12" />
+			<column name="category" type="varchar" length="255" jt="12" />
+			<column name="default_price" type="money" jt="3" />
+			<index name="pk_products_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="products_csv" prior="products_0" >
+			<comment><![CDATA[table for product details]]></comment>
+			<column name="id" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[unique key]]></comment>
+			</column>
+			<column name="name" type="varchar" length="100" jt="12" />
+			<column name="slogan" type="varchar" length="255" jt="12" />
+			<column name="description" type="varchar" length="255" jt="12" />
+			<column name="category" type="varchar" length="255" jt="12" />
+			<column name="default_price" type="money" jt="3" />
+			<index name="pk_products_id_0" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_products_csv_products_import" to_schema="sdc schema primary" to_table="products_import" >
+				<fk_column name="id" pk="id" />
+			</fk>
+		</table>
+		<table name="products_import" prior="products_csv_0" >
+			<comment><![CDATA[table for product details]]></comment>
+			<column name="id" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[unique key]]></comment>
+			</column>
+			<column name="name" type="varchar" length="100" jt="12" />
+			<column name="slogan" type="varchar" length="255" jt="12" />
+			<column name="description" type="varchar" length="255" jt="12" />
+			<column name="category" type="varchar" length="255" jt="12" />
+			<column name="default_price" type="money" jt="3" />
+			<index name="pk_products_id_1" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="related_products" prior="related" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="product_1" type="integer" jt="4" />
+			<column name="product_2" type="integer" jt="4" />
+			<index name="pk_related_products_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_related_products_products1" to_schema="sdc schema primary" to_table="products" >
+				<fk_column name="product_1" pk="id" />
+			</fk>
+			<fk name="fk_related_products_products2" to_schema="sdc schema primary" to_table="products" >
+				<fk_column name="product_2" pk="id" />
+			</fk>
+		</table>
+		<table name="skus" prior="sku" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="quantity" type="integer" jt="4" />
+			<column name="size_label" type="varchar" length="32" jt="12" />
+			<column name="style_id" type="integer" jt="4" />
+			<column name="sku" type="varchar" length="32" jt="12" >
+				<comment><![CDATA[add this just in case the data looks different than expected. if sku numbers are not unique or can be strings and not just integers then this will be used.]]></comment>
+			</column>
+			<column name="size_category" type="varchar" length="100" jt="12" />
+			<index name="pk_skus_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_skus_styles" to_schema="sdc schema primary" to_table="styles" >
+				<fk_column name="style_id" pk="id" />
+			</fk>
+		</table>
+		<table name="styles" prior="tbl_0" >
+			<column name="id" prior="style_id" type="integer" jt="4" mandatory="y" />
+			<column name="product_id" type="integer" jt="4" />
+			<column name="name" type="varchar" length="100" jt="12" />
+			<column name="sale_price" type="money" jt="3" />
+			<column name="original_price" type="money" jt="3" />
+			<column name="is_default" prior="default?" type="boolean" jt="-7" />
+			<index name="pk_styles_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_styles_products" to_schema="sdc schema primary" to_table="products" >
+				<fk_column name="product_id" pk="id" />
+			</fk>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout_cfa" show_relation="columns" >
+		<entity schema="sdc schema primary" name="feature_values" color="C1D8EE" x="816" y="176" />
+		<entity schema="sdc schema primary" name="feature_values_import" color="3986C1" x="1072" y="560" />
+		<entity schema="sdc schema primary" name="features" color="C1D8EE" x="816" y="80" />
+		<entity schema="sdc schema primary" name="features_csv" color="3986C1" x="1072" y="240" />
+		<entity schema="sdc schema primary" name="features_import" color="3986C1" x="1360" y="560" />
+		<entity schema="sdc schema primary" name="photos" color="C1D8EE" x="544" y="320" />
+		<entity schema="sdc schema primary" name="product_features" color="C1D8EE" x="528" y="80" />
+		<entity schema="sdc schema primary" name="product_features_import" color="3986C1" x="1040" y="688" />
+		<entity schema="sdc schema primary" name="products" color="C1D8EE" x="288" y="80" />
+		<entity schema="sdc schema primary" name="products_csv" color="3986C1" x="1296" y="256" />
+		<entity schema="sdc schema primary" name="products_import" color="3986C1" x="1504" y="400" />
+		<entity schema="sdc schema primary" name="related_products" color="C1D8EE" x="48" y="80" />
+		<entity schema="sdc schema primary" name="skus" color="C1D8EE" x="288" y="528" />
+		<entity schema="sdc schema primary" name="styles" color="C1D8EE" x="288" y="320" />
+		<group name="prod" color="C4E0F9" >
+			<entity schema="sdc schema primary" name="feature_values" />
+			<entity schema="sdc schema primary" name="features" />
+			<entity schema="sdc schema primary" name="photos" />
+			<entity schema="sdc schema primary" name="product_features" />
+			<entity schema="sdc schema primary" name="products" />
+			<entity schema="sdc schema primary" name="related_products" />
+			<entity schema="sdc schema primary" name="skus" />
+			<entity schema="sdc schema primary" name="styles" />
+		</group>
+		<script name="SQL_Editor" id="Editor_14e0" language="SQL" >
+			<string><![CDATA[CREATE SCHEMA IF NOT EXISTS "sdc schema primary";
+
+CREATE  TABLE "sdc schema primary".feature_values ( 
+	id                   integer  NOT NULL ,
+	value_name           varchar   ,
+	CONSTRAINT pk_feature_value_id PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE "sdc schema primary".features ( 
+	id                   integer  NOT NULL ,
+	feature              char(255)   ,
+	CONSTRAINT pk_features_id PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE "sdc schema primary".products ( 
+	id                   integer  NOT NULL ,
+	name                 varchar(100)   ,
+	slogan               varchar(255)   ,
+	description          varchar(255)   ,
+	category             varchar(255)   ,
+	default_price        money   ,
+	CONSTRAINT pk_products_id PRIMARY KEY ( id )
+ );
+
+COMMENT ON TABLE "sdc schema primary".products IS 'table for product details';
+
+COMMENT ON COLUMN "sdc schema primary".products.id IS 'unique key';
+
+CREATE  TABLE "sdc schema primary".related_products ( 
+	id                   integer  NOT NULL ,
+	product_1            integer   ,
+	product_2            integer   ,
+	CONSTRAINT pk_related_products_id PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE "sdc schema primary".styles ( 
+	id                   integer  NOT NULL ,
+	name                 varchar(100)   ,
+	original_price       money   ,
+	sale_price           money   ,
+	default             boolean   ,
+	product_id           integer   ,
+	CONSTRAINT pk_styles_id PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE "sdc schema primary".photos ( 
+	id                   integer  NOT NULL ,
+	thumbnail_url        char(510)   ,
+	url                  char(510)   ,
+	style_id             integer   ,
+	CONSTRAINT pk_photos_id PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE "sdc schema primary".product_features ( 
+	id                   integer  NOT NULL ,
+	product_id           integer   ,
+	feature_id           integer   ,
+	feature_value        integer   ,
+	CONSTRAINT pk_product_features_id PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE "sdc schema primary".skus ( 
+	id                   integer  NOT NULL ,
+	quantity             integer   ,
+	size_label           varchar(32)   ,
+	style_id             integer   ,
+	sku                  varchar(32)   ,
+	size_category        varchar(100)   ,
+	CONSTRAINT pk_skus_id PRIMARY KEY ( id )
+ );
+
+COMMENT ON COLUMN "sdc schema primary".skus.sku IS 'add this just in case the data looks different than expected. if sku numbers are not unique or can be strings and not just integers then this will be used.';
+
+ALTER TABLE "sdc schema primary".photos ADD CONSTRAINT fk_photos_photos FOREIGN KEY ( style_id ) REFERENCES "sdc schema primary".styles( id );
+
+ALTER TABLE "sdc schema primary".product_features ADD CONSTRAINT fk_product_features_products FOREIGN KEY ( product_id ) REFERENCES "sdc schema primary".products( id );
+
+ALTER TABLE "sdc schema primary".product_features ADD CONSTRAINT fk_product_features_features FOREIGN KEY ( feature_id ) REFERENCES "sdc schema primary".features( id );
+
+ALTER TABLE "sdc schema primary".product_features ADD CONSTRAINT fk_product_features_feature_value FOREIGN KEY ( feature_value ) REFERENCES "sdc schema primary".feature_values( id );
+
+ALTER TABLE "sdc schema primary".related_products ADD CONSTRAINT fk_related_products_products1 FOREIGN KEY ( product_1 ) REFERENCES "sdc schema primary".products( id );
+
+ALTER TABLE "sdc schema primary".related_products ADD CONSTRAINT fk_related_products_products2 FOREIGN KEY ( product_2 ) REFERENCES "sdc schema primary".products( id );
+
+ALTER TABLE "sdc schema primary".skus ADD CONSTRAINT fk_skus_styles FOREIGN KEY ( style_id ) REFERENCES "sdc schema primary".styles( id );
+
+ALTER TABLE "sdc schema primary".styles ADD CONSTRAINT fk_styles_products FOREIGN KEY ( product_id ) REFERENCES "sdc schema primary".products( id );
+]]></string>
+		</script>
+		<script name="SQL_Editor_001" id="Editor_1ba" language="SQL" >
+			<string><![CDATA[CREATE SCHEMA IF NOT EXISTS "sdc schema primary";
+
+CREATE  TABLE "sdc schema primary".feature_values ( 
+	id                   integer  NOT NULL ,
+	value_name           varchar   ,
+	CONSTRAINT pk_feature_value_id PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE "sdc schema primary".features ( 
+	id                   integer  NOT NULL ,
+	feature              char(255)   ,
+	CONSTRAINT pk_features_id PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE "sdc schema primary".products ( 
+	id                   integer  NOT NULL ,
+	name                 varchar(100)   ,
+	slogan               varchar(255)   ,
+	description          varchar(255)   ,
+	category             varchar(255)   ,
+	default_price        money   ,
+	CONSTRAINT pk_products_id PRIMARY KEY ( id )
+ );
+
+COMMENT ON TABLE "sdc schema primary".products IS 'table for product details';
+
+COMMENT ON COLUMN "sdc schema primary".products.id IS 'unique key';
+
+CREATE  TABLE "sdc schema primary".related_products ( 
+	id                   integer  NOT NULL ,
+	product_1            integer   ,
+	product_2            integer   ,
+	CONSTRAINT pk_related_products_id PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE "sdc schema primary".styles ( 
+	id                   integer  NOT NULL ,
+	product_id           integer   ,
+	name                 varchar(100)   ,
+	sale_price           money   ,
+	original_price       money   ,
+	is_default           boolean   ,
+	CONSTRAINT pk_styles_id PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE "sdc schema primary".photos ( 
+	id                   integer  NOT NULL ,
+	thumbnail_url        char(510)   ,
+	url                  char(510)   ,
+	style_id             integer   ,
+	CONSTRAINT pk_photos_id PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE "sdc schema primary".product_features ( 
+	id                   integer  NOT NULL ,
+	product_id           integer   ,
+	feature_id           integer   ,
+	feature_value        integer   ,
+	CONSTRAINT pk_product_features_id PRIMARY KEY ( id )
+ );
+
+CREATE  TABLE "sdc schema primary".skus ( 
+	id                   integer  NOT NULL ,
+	quantity             integer   ,
+	size_label           varchar(32)   ,
+	style_id             integer   ,
+	sku                  varchar(32)   ,
+	size_category        varchar(100)   ,
+	CONSTRAINT pk_skus_id PRIMARY KEY ( id )
+ );
+
+COMMENT ON COLUMN "sdc schema primary".skus.sku IS 'add this just in case the data looks different than expected. if sku numbers are not unique or can be strings and not just integers then this will be used.';
+
+ALTER TABLE "sdc schema primary".photos ADD CONSTRAINT fk_photos_photos FOREIGN KEY ( style_id ) REFERENCES "sdc schema primary".styles( id );
+
+ALTER TABLE "sdc schema primary".product_features ADD CONSTRAINT fk_product_features_products FOREIGN KEY ( product_id ) REFERENCES "sdc schema primary".products( id );
+
+ALTER TABLE "sdc schema primary".product_features ADD CONSTRAINT fk_product_features_features FOREIGN KEY ( feature_id ) REFERENCES "sdc schema primary".features( id );
+
+ALTER TABLE "sdc schema primary".product_features ADD CONSTRAINT fk_product_features_feature_value FOREIGN KEY ( feature_value ) REFERENCES "sdc schema primary".feature_values( id );
+
+ALTER TABLE "sdc schema primary".related_products ADD CONSTRAINT fk_related_products_products1 FOREIGN KEY ( product_1 ) REFERENCES "sdc schema primary".products( id );
+
+ALTER TABLE "sdc schema primary".related_products ADD CONSTRAINT fk_related_products_products2 FOREIGN KEY ( product_2 ) REFERENCES "sdc schema primary".products( id );
+
+ALTER TABLE "sdc schema primary".skus ADD CONSTRAINT fk_skus_styles FOREIGN KEY ( style_id ) REFERENCES "sdc schema primary".styles( id );
+
+ALTER TABLE "sdc schema primary".styles ADD CONSTRAINT fk_styles_products FOREIGN KEY ( product_id ) REFERENCES "sdc schema primary".products( id );
+]]></string>
+		</script>
+	</layout>
+</project>
