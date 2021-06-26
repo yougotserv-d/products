@@ -23,19 +23,52 @@ async function getProduct(req, res) {
 
 async function getStyles(req, res) {
   const id = req.params.product_id;
-  const styles = await db.query('SELECT row_to_json(a) FROM (SELECT s.id, s.name, s.original_price, s.sale_price, s.is_default, (SELECT array_to_json(array_agg(row_to_json(b))) FROM (SELECT p.thumbnail_url, p.url FROM photos p WHERE p.style_id = s.id) b) AS photos FROM styles s WHERE s.product_id = $1) a', [id]);
+  const styles = await db.query(`
+  SELECT row_to_json(
+    (
+      SELECT s.id, s.name, s.original_price, s.sale_price, s.is_default AS default,
+        (
+          SELECT array_agg(row_to_json(
+            SELECT p.thumbnail_url, p.url
+            FROM photos p
+            WHERE p.style_id = s.id
+          )
+        ) AS photos,
+        (
+          SELECT json_agg(skus_all)
+          FROM
+          (
+            SELECT json_build_object(
+              (SELECT sku)
+              (SELECT json_build_object)
+            ) AS skus_all
+            FROM
+            (
+              SELECT id AS sku, json_build_object(
+                'size', (
+                SELECT size
+              ),
+              'quantity', (
+                SELECT quantity
+              )
+            )
+            FROM
+            (
+              SELECT id, size, quantity
+              FROM skus
+              WHERE style_id=1
+            )
+          )
+        )
+      FROM styles s WHERE s.product_id = $1
+    )
+  )`, [id]);
   console.log('styles: ', styles);
   res.status(200).send(styles);
 }
 
 const getRelated = (req, res) => {
   const id = req.params.product_id;
-  pool.query('SELECT related_product_id FROM related_products WHERE current_product_id=$1', [id], (error, results) => {
-    if (error) {
-      throw error;
-    }
-    res.status(200).json(results.rows)
-  })
 }
 
 module.exports = {
