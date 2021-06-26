@@ -1,20 +1,17 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const db = require('./queries');
+const { getProducts, getProduct, getStyles, getRelated } = require('./queries');
 const app = express();
 const port = 3000;
 
-app.use(bodyParser.json());
 app.use(
-  bodyParser.urlencoded({
+  express.urlencoded({
     extended: true,
   })
 )
-app.get('/products', db.getProducts);
-app.get('/products:product_id', db.getProduct);
-app.get('/products:product_id/styles', db.getStyles);
-app.get('/products:product_id/related', db.getRelated);
-
+app.get('/products', getProducts);
+app.get('/products/:product_id', getProduct);
+app.get('/products/:product_id/styles', getStyles);
+app.get('/products/:product_id/related', getRelated);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
