@@ -28,38 +28,41 @@ async function getStyles(req, res) {
     (
       SELECT s.id, s.name, s.original_price, s.sale_price, s.is_default AS default,
         (
-          SELECT array_agg(row_to_json(
-            SELECT p.thumbnail_url, p.url
+          SELECT array_agg(row_to_json(c))
+          FROM
+          (
+            SELECT thumbnail_url, url
             FROM photos p
-            WHERE p.style_id = s.id
-          )
+            WHERE p.style_id = 1
+          ) c
         ) AS photos,
         (
           SELECT json_agg(skus_all)
           FROM
           (
             SELECT json_build_object(
-              (SELECT sku)
-              (SELECT json_build_object)
+              (SELECT sku),
+              (SELECT obj)
             ) AS skus_all
             FROM
             (
               SELECT id AS sku, json_build_object(
                 'size', (
-                SELECT size
-              ),
-              'quantity', (
+                SELECT size_label
+                ),
+                'quantity', (
                 SELECT quantity
-              )
-            )
-            FROM
-            (
-              SELECT id, size, quantity
-              FROM skus
-              WHERE style_id=1
-            )
-          )
-        )
+                )
+              ) AS obj
+              FROM
+              (
+                SELECT id, size_label, quantity
+                FROM skus sk
+                WHERE sk.style_id = 1
+              ) x
+            ) y
+          ) z
+        ) AS skus
       FROM styles s WHERE s.product_id = $1
     )
   )`, [id]);
