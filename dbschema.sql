@@ -21,6 +21,7 @@ CREATE  TABLE related_products (
 	related_product_id   integer   ,
 	CONSTRAINT pk_related_products_id PRIMARY KEY ( id )
  );
+CREATE INDEX idx_related_product_id ON related_products(related_product_id);
 
 DROP TABLE IF EXISTS styles;
 CREATE  TABLE styles (
@@ -32,6 +33,7 @@ CREATE  TABLE styles (
 	is_default           boolean   ,
 	CONSTRAINT pk_styles_id PRIMARY KEY ( id )
  );
+CREATE INDEX idx_product_id ON styles(product_id);
 
 DROP TABLE IF EXISTS photos;
 CREATE  TABLE photos (
@@ -41,6 +43,7 @@ CREATE  TABLE photos (
 	thumbnail_url        text   ,
 	CONSTRAINT pk_photos_id PRIMARY KEY ( id )
  );
+CREATE INDEX idx_style_id ON photos(style_id);
 
 DROP TABLE IF EXISTS product_features;
 CREATE  TABLE product_features (
@@ -50,6 +53,7 @@ CREATE  TABLE product_features (
 	value_name           varchar(100)           ,
 	CONSTRAINT pk_product_features_id PRIMARY KEY ( id )
  );
+CREATE INDEX idx_product_id_product_features ON product_features(product_id);
 
 DROP TABLE IF EXISTS skus;
 CREATE  TABLE skus (
@@ -59,6 +63,7 @@ CREATE  TABLE skus (
 	quantity             integer   ,
 	CONSTRAINT pk_skus_id PRIMARY KEY ( id )
  );
+CREATE INDEX idx_style_id_sku ON skus(style_id);
 
 ALTER TABLE photos ADD CONSTRAINT fk_photos_photos FOREIGN KEY ( style_id ) REFERENCES styles( id );
 
@@ -84,6 +89,6 @@ COPY skus FROM '/home/alexander/hackreactor/work/yougotserv-d/products/raw data/
 
 COPY photos FROM '/home/alexander/hackreactor/work/yougotserv-d/products/raw data/photos.csv' DELIMITER ',' CSV HEADER;
 
-INSERT INTO related_products (id, current_product_id, related_product_id) (SELECT id, current_product_id, related_product_id FROM features_csv);
+COPY related_products FROM '/home/alexander/hackreactor/work/yougotserv-d/products/raw data/related.csv' DELIMITER ',' CSV HEADER;
 
 COPY product_features FROM '/home/alexander/hackreactor/work/yougotserv-d/products/raw data/features.csv' DELIMITER ',' CSV HEADER;
