@@ -24,48 +24,41 @@ async function getProduct(req, res) {
 async function getStyles(req, res) {
   const id = req.params.product_id;
   const styles = await db.query(`
-  SELECT row_to_json(
-    (
-      SELECT s.id, s.name, s.original_price, s.sale_price, s.is_default AS default,
+    SELECT s.id, s.name, s.original_price, s.sale_price, s.is_default AS default,
+      (
+        SELECT json_agg(row_to_json(c))
+        FROM
         (
-          SELECT array_agg(row_to_json(c))
+          SELECT thumbnail_url, url
+          FROM photos p
+          WHERE p.style_id = s.id
+        ) c
+      ) AS photos,
+      (
+        SELECT json_object_agg(
+          (SELECT sku_id),
+          (SELECT json_build_object)
+        )
+        FROM
+        (
+          SELECT
+          (SELECT id) AS sku_id, json_build_object(
+            'size', (
+              SELECT size_label
+              ),
+              'quantity', (
+              SELECT quantity
+              )
+          )
           FROM
           (
-            SELECT thumbnail_url, url
-            FROM photos p
-            WHERE p.style_id = 1
-          ) c
-        ) AS photos,
-        (
-          SELECT json_agg(skus_all)
-          FROM
-          (
-            SELECT json_build_object(
-              (SELECT sku),
-              (SELECT obj)
-            ) AS skus_all
-            FROM
-            (
-              SELECT id AS sku, json_build_object(
-                'size', (
-                SELECT size_label
-                ),
-                'quantity', (
-                SELECT quantity
-                )
-              ) AS obj
-              FROM
-              (
-                SELECT id, size_label, quantity
-                FROM skus sk
-                WHERE sk.style_id = 1
-              ) x
-            ) y
-          ) z
-        ) AS skus
-      FROM styles s WHERE s.product_id = $1
-    )
-  )`, [id]);
+            SELECT id, size_label, quantity
+            FROM skus sk
+            WHERE sk.style_id = s.id
+          ) y
+        ) z
+      ) AS skus
+    FROM styles s WHERE s.product_id = $1`, [id]);
   console.log('styles: ', styles);
   res.status(200).send(styles);
 }

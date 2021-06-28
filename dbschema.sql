@@ -37,8 +37,8 @@ DROP TABLE IF EXISTS photos;
 CREATE  TABLE photos (
 	id                   SERIAL  NOT NULL ,
 	style_id             integer   ,
-	url                  char(510)   ,
-	thumbnail_url        char(765)   ,
+	url                  text   ,
+	thumbnail_url        text   ,
 	CONSTRAINT pk_photos_id PRIMARY KEY ( id )
  );
 
