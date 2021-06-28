@@ -22,6 +22,7 @@ CREATE  TABLE related_products (
 	CONSTRAINT pk_related_products_id PRIMARY KEY ( id )
  );
 CREATE INDEX idx_related_product_id ON related_products(related_product_id);
+CREATE INDEX idx_current_product_id ON related_products(current_product_id);
 
 DROP TABLE IF EXISTS styles;
 CREATE  TABLE styles (

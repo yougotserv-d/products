@@ -1,6 +1,7 @@
 const db = require('./database.js');
 
-const productsQuery = 'SELECT id, name, slogan, description, category, default_price FROM products';
+const productsQuery1 = 'SELECT id, name, slogan, description, category, default_price FROM products WHERE id IN (';
+const productsQuery2 = ') LIMIT ';
 const productQuery = 'SELECT id, name, slogan, description, category, default_price FROM products WHERE id=$1';
 const featuresQuery = 'SELECT feature, value_name FROM product_features WHERE product_id=$1';
 const stylesQuery = `
@@ -42,7 +43,25 @@ FROM styles s WHERE s.product_id = $1`;
 const relatedQuery = 'SELECT DISTINCT related_product_id FROM related_products WHERE current_product_id=$1';
 
 async function getProducts(req, res) {
-  const products = await db.any(productsQuery);
+  const getPage = () => {
+    if (req.query.page === '0' || !req.query.page) {
+      return 1;
+    }
+    return Number(req.query.page);
+  };
+  const page = getPage();
+  const count = Number(req.query.count) || 5;
+  const start = ((page * count) - (count - 1));
+  const end = start + count;
+  let range = [];
+
+  for (let i = start; i < end; i++) {
+    range.push(i);
+  };
+  range = range.join(', ');
+  console.log('start:', start, 'count:', count, 'end:', end);
+  const products = await db.any(productsQuery1 + range + productsQuery2 + count);
+
   res.status(200).send(products);
 }
 
