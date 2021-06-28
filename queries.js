@@ -24,7 +24,7 @@ async function getProduct(req, res) {
 async function getStyles(req, res) {
   const id = req.params.product_id;
   const styles = await db.query(`
-    SELECT s.id, s.name, s.original_price, s.sale_price, s.is_default AS default,
+    SELECT s.id AS style_id, s.name, s.original_price, s.sale_price, s.is_default AS default,
       (
         SELECT json_agg(row_to_json(c))
         FROM
@@ -59,8 +59,7 @@ async function getStyles(req, res) {
         ) z
       ) AS skus
     FROM styles s WHERE s.product_id = $1`, [id]);
-  console.log('styles: ', styles);
-  res.status(200).send(styles);
+  res.status(200).send({'product_id': id, 'results': styles});
 }
 
 const getRelated = (req, res) => {
