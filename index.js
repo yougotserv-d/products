@@ -1,3 +1,5 @@
+require('newrelic');
+
 const express = require('express');
 const { getProducts, getProduct, getStyles, getRelated } = require('./queries');
 const app = express();
