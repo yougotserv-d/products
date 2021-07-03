@@ -16,5 +16,5 @@ app.get('/products/:product_id/styles', getStyles);
 app.get('/products/:product_id/related', getRelated);
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Example app listening on port: ${port}`)
 });
